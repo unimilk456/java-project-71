@@ -23,6 +23,7 @@ public class Differ {
     private static final String TYPE = "type";
     private static final String ADDED = " + ";
     private static final String REMOVED = " - ";
+    private static final String NOCHANGES = "   ";
     public static String generate(Path file1, Path file2) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> map1 = readMapFromFile(mapper,file1);
@@ -54,26 +55,25 @@ public class Differ {
             Object val2 = map2.get(key);
 
             if (String.valueOf(val1).equals(String.valueOf(val2))) {
-                Map<String, Object> map = new LinkedHashMap<>();
-                map.put(TYPE, "");
-                map.put("   " + key, val1);
-                result.add(map);
+                result.add(createMapWithDifference(key, String.valueOf(val1), NOCHANGES));
             } else {
                 if (map1.containsKey(key)) {
-                    Map<String, Object> mapMinus = new LinkedHashMap<>();
-                    mapMinus.put(TYPE, REMOVED);
-                    mapMinus.put(key, val1);
-                    result.add(mapMinus);
+                    result.add(createMapWithDifference(key, String.valueOf(val1), REMOVED));
                 }
                 if (map2.containsKey(key)) {
-                    Map<String, Object> mapPlus = new LinkedHashMap<>();
-                    mapPlus.put(TYPE, ADDED);
-                    mapPlus.put(key, val2);
-                    result.add(mapPlus);
+                    result.add(createMapWithDifference(key, String.valueOf(val1), ADDED));
                 }
             }
         }
         return result;
+    }
+
+    private static Map<String, Object> createMapWithDifference(String key, String value, String type ){
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put(TYPE, type);
+        map.put(key, value);
+
+        return map;
     }
 
 

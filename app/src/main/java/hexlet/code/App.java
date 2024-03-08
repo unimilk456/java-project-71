@@ -27,8 +27,8 @@ public class App implements Callable<Integer> {
             System.out.println("Please provide two file paths as arguments");
             return;
         }
-        Path path1 = Paths.get(args[0]);
-        Path path2 = Paths.get(args[1]);
+        Path path1 = Paths.get(args[0]).toAbsolutePath();
+        Path path2 = Paths.get(args[1]).toAbsolutePath();
 
         String result = Differ.generate(path1, path2);
 
