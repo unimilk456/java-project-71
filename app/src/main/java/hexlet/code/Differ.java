@@ -51,18 +51,11 @@ public class Differ {
 
         List<Map<String, Object>> result = new ArrayList<>();
         for (String key : allKeys) {
-            Object val1 = map1.get(key);
-            Object val2 = map2.get(key);
-
-            if (String.valueOf(val1).equals(String.valueOf(val2))) {
-                result.add(createMapWithDifference(key, String.valueOf(val1), NOCHANGES));
+            if (bothMapsHaveTheSameValueForKey(map1, map2, key)) {
+                result.add(createMapWithDifference(key, String.valueOf(map1.get(key)), NOCHANGES));
             } else {
-                if (map1.containsKey(key)) {
-                    result.add(createMapWithDifference(key, String.valueOf(val1), REMOVED));
-                }
-                if (map2.containsKey(key)) {
-                    result.add(createMapWithDifference(key, String.valueOf(val1), ADDED));
-                }
+                addRemovedKeyToResultIfPresent(map1, result, key);
+                addAddedKeyToResultIfPresent(map2, result, key);
             }
         }
         return result;
@@ -87,6 +80,22 @@ public class Differ {
             System.out.println("Error json parsing");
         }
         return map;
+    }
+
+    private static boolean bothMapsHaveTheSameValueForKey(Map<String, Object> map1, Map<String, Object> map2, String key) {
+        return String.valueOf(map1.get(key)).equals(String.valueOf(map2.get(key)));
+    }
+
+    private static void addRemovedKeyToResultIfPresent(Map<String, Object> map1, List<Map<String, Object>> result, String key) {
+        if (map1.containsKey(key)) {
+            result.add(createMapWithDifference(key, String.valueOf(map1.get(key)), REMOVED));
+        }
+    }
+
+    private static void addAddedKeyToResultIfPresent(Map<String, Object> map2, List<Map<String, Object>> result, String key) {
+        if (map2.containsKey(key)) {
+            result.add(createMapWithDifference(key, String.valueOf(map2.get(key)), ADDED));
+        }
     }
 
 }
