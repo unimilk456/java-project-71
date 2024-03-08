@@ -81,9 +81,10 @@ public class Differ {
         Map<String, Object> map = new HashMap<>();
         try {
             String content = Files.readString(file);
-            map = mapper.readValue(content, new TypeReference<Map<>>() {});
+            map = mapper.readValue(content, new TypeReference<Map<String, Object>>() {});
         } catch (JsonProcessingException jsonException) {
             LOG.error("Error parsing JSON", jsonException);
+            System.out.println("Error json parsing");
         }
         return map;
     }
