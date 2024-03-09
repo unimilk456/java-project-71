@@ -30,19 +30,28 @@ public class Differ {
         Map<String, Object> map2 = readMapFromFile(mapper,file2);
 
         List<Map<String, Object>> diff = getDifferenceInJSONFormat(map1, map2);
+
+        return buildDifferenceString(diff);
+    }
+
+    private static String buildDifferenceString(List<Map<String, Object>> diff) {
         StringBuilder difference = new StringBuilder("{\n");
         for (Map<String, Object> map : diff) {
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
-                if (entry.getKey().equals(TYPE)) {
-                    difference.append(entry.getValue());
-                } else {
-                    difference.append(entry.getKey()).append(":").append(entry.getValue()).append("\n");
-                }
-            }
+            appendEntryToDifferenceString(difference, map);
         }
         difference.append("}");
 
         return difference.toString();
+    }
+
+    private static void appendEntryToDifferenceString(StringBuilder difference, Map<String, Object> map) {
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            if (entry.getKey().equals(TYPE)) {
+                difference.append(entry.getValue());
+            } else {
+                difference.append(entry.getKey()).append(":").append(entry.getValue()).append("\n");
+            }
+        }
     }
 
     public static List<Map<String, Object>> getDifferenceInJSONFormat(Map<String, Object> map1, Map<String, Object> map2) {
