@@ -1,6 +1,6 @@
 package hexlet.code;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -24,10 +24,11 @@ public class Differ {
     private static final String ADDED = " + ";
     private static final String REMOVED = " - ";
     private static final String NOCHANGES = "   ";
-    public static String generate(Path file1, Path file2) throws IOException {
+
+    public static String generate(Path file1, Path file2) {
         ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object> map1 = readMapFromFile(mapper,file1);
-        Map<String, Object> map2 = readMapFromFile(mapper,file2);
+        Map<String, Object> map1 = readMapFromFile(mapper, file1);
+        Map<String, Object> map2 = readMapFromFile(mapper, file2);
 
         List<Map<String, Object>> diff = getDifferenceInJSONFormat(map1, map2);
 
@@ -49,12 +50,16 @@ public class Differ {
             if (entry.getKey().equals(TYPE)) {
                 difference.append(entry.getValue());
             } else {
-                difference.append(entry.getKey()).append(":").append(entry.getValue()).append("\n");
+                difference.append(entry.getKey())
+                        .append(":")
+                        .append(entry.getValue())
+                        .append("\n");
             }
         }
     }
 
-    public static List<Map<String, Object>> getDifferenceInJSONFormat(Map<String, Object> map1, Map<String, Object> map2) {
+    public static List<Map<String, Object>> getDifferenceInJSONFormat(
+            Map<String, Object> map1, Map<String, Object> map2) {
         TreeSet<String> allKeys = new TreeSet<>(map1.keySet());
         allKeys.addAll(map2.keySet());
 
@@ -70,7 +75,7 @@ public class Differ {
         return result;
     }
 
-    private static Map<String, Object> createMapWithDifference(String key, String value, String type ){
+    private static Map<String, Object> createMapWithDifference(String key, String value, String type) {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put(TYPE, type);
         map.put(key, value);
@@ -78,30 +83,35 @@ public class Differ {
         return map;
     }
 
-
-    private static Map<String, Object> readMapFromFile(ObjectMapper mapper, Path file) throws IOException {
+    public static Map<String, Object> readMapFromFile(ObjectMapper mapper, Path file) {
         Map<String, Object> map = new HashMap<>();
         try {
             String content = Files.readString(file);
-            map = mapper.readValue(content, new TypeReference<>() {});
-        } catch (JsonProcessingException jsonException) {
+            map = mapper.readValue(content, new TypeReference<>() {
+            });
+        } catch (JsonParseException jsonException) {
             LOG.error("Error parsing JSON", jsonException);
             System.out.println("Error json parsing");
+        } catch (IOException e) {
+            LOG.error("IO Error", e);
         }
         return map;
     }
 
-    private static boolean bothMapsHaveTheSameValueForKey(Map<String, Object> map1, Map<String, Object> map2, String key) {
+    private static boolean bothMapsHaveTheSameValueForKey(
+            Map<String, Object> map1, Map<String, Object> map2, String key) {
         return String.valueOf(map1.get(key)).equals(String.valueOf(map2.get(key)));
     }
 
-    private static void addRemovedKeyToResultIfPresent(Map<String, Object> map1, List<Map<String, Object>> result, String key) {
+    private static void addRemovedKeyToResultIfPresent(
+            Map<String, Object> map1, List<Map<String, Object>> result, String key) {
         if (map1.containsKey(key)) {
             result.add(createMapWithDifference(key, String.valueOf(map1.get(key)), REMOVED));
         }
     }
 
-    private static void addAddedKeyToResultIfPresent(Map<String, Object> map2, List<Map<String, Object>> result, String key) {
+    private static void addAddedKeyToResultIfPresent(
+            Map<String, Object> map2, List<Map<String, Object>> result, String key) {
         if (map2.containsKey(key)) {
             result.add(createMapWithDifference(key, String.valueOf(map2.get(key)), ADDED));
         }
