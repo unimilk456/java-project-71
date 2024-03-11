@@ -8,7 +8,7 @@ plugins {
 }
 
 jacoco {
-    toolVersion = "0.8.6"
+    toolVersion = "0.8.11"
     reportsDirectory.set(layout.buildDirectory.dir("customJacocoReportDir"))
 }
 group = "hexlet.code"
@@ -50,14 +50,18 @@ tasks.register<Exec>("codeClimateTestReporter") {
 
     doFirst {
         exec {
-            commandLine("bash", "-c", "CC_TEST_REPORTER_ID=2c6466cc83db471db212472a08a2290d7a67c7c5b605ed886730e2a985a004ee ./cc-test-reporter before-build")
+            commandLine("bash", "-c", "CC_TEST_REPORTER_ID=2c6466cc83db471db212472a08a2290d7a67c7c5b605ed886730e2a985a004ee ./cc-test-reporter format-coverage build/reports/jacoco/test/jacocoTestReport.xml --input-type jacoco")
         }
     }
+//    JACOCO_SOURCE_PATH=src/main/java ./cc-test-reporter \
+//    format-coverage build/reports/jacoco/test/jacocoTestReport.xml     \
+//    --input-type jacoco
+//            ./cc-test-reporter -r 2c6466cc83db471db212472a08a2290d7a67c7c5b605ed886730e2a985a004ee upload-coverage
 
     doLast {
-        exec {
-            commandLine("bash", "-c","JACOCO_SOURCE_PATH=src/main/java CC_TEST_REPORTER_ID=2c6466cc83db471db212472a08a2290d7a67c7c5b605ed886730e2a985a004ee ./cc-test-reporter format-coverage build/reports/jacoco/test/jacocoTestReport.xml --input-type jacoco")
-        }
+//        exec {
+//            commandLine("bash", "-c","JACOCO_SOURCE_PATH=src/main/java CC_TEST_REPORTER_ID=2c6466cc83db471db212472a08a2290d7a67c7c5b605ed886730e2a985a004ee ./cc-test-reporter format-coverage build/reports/jacoco/test/jacocoTestReport.xml --input-type jacoco")
+//        }
         exec {
             commandLine("bash", "-c", "CC_TEST_REPORTER_ID=2c6466cc83db471db212472a08a2290d7a67c7c5b605ed886730e2a985a004ee ./cc-test-reporter upload-coverage")
         }
