@@ -63,7 +63,7 @@ tasks.register<Exec>("codeClimateTestReporter") {
 //            commandLine("bash", "-c","JACOCO_SOURCE_PATH=src/main/java CC_TEST_REPORTER_ID=2c6466cc83db471db212472a08a2290d7a67c7c5b605ed886730e2a985a004ee ./cc-test-reporter format-coverage build/reports/jacoco/test/jacocoTestReport.xml --input-type jacoco")
 //        }
         exec {
-            commandLine("bash", "-c", "CC_TEST_REPORTER_ID=2c6466cc83db471db212472a08a2290d7a67c7c5b605ed886730e2a985a004ee ./cc-test-reporter upload-coverage")
+            commandLine("bash", "-c", "CC_TEST_REPORTER_ID=2c6466cc83db471db212472a08a2290d7a67c7c5b605ed886730e2a985a004ee  ./cc-test-reporter upload-coverage")
         }
     }
 }
