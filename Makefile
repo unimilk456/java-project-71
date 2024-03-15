@@ -28,7 +28,7 @@ lint:
     make -C app lint
 
 checkstyleMain:
-    make -C app lint
+    ./gradlew checkstyleMain
 
 
 check-deps:
