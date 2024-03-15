@@ -27,6 +27,10 @@ report:
 lint:
     make -C app lint
 
+checkstyleMain:
+    make -C app lint
+
+
 check-deps:
     make -C app check-deps
 
