@@ -38,29 +38,29 @@ tasks.test {
 
 tasks.jacocoTestReport { reports { xml.required.set(true) } }
 
-tasks.test {
-    finalizedBy("codeClimateTestReporter")
-}
-
-val ccTestReporterId = "2c6466cc83db471db212472a08a2290d7a67c7c5b605ed886730e2a985a004ee"
-tasks.register<Exec>("codeClimateTestReporter") {
-    dependsOn("test")
-    executable("./cc-test-reporter")
-
-    doFirst {
-        exec {
-            commandLine("bash", "-c",
-                    "JACOCO_SOURCE_PATH=src/main/java " +
-                    "CC_TEST_REPORTER_ID=$ccTestReporterId " +
-                    "./cc-test-reporter format-coverage build/reports/jacoco/test/jacocoTestReport.xml " +
-                    "--input-type jacoco")
-        }
-    }
-    doLast {
-        exec {
-            commandLine("bash", "-c",
-                    "CC_TEST_REPORTER_ID=$ccTestReporterId  " +
-                    "./cc-test-reporter upload-coverage")
-        }
-    }
-}
+//tasks.test {
+//    finalizedBy("codeClimateTestReporter")
+//}
+//
+//val ccTestReporterId = "2c6466cc83db471db212472a08a2290d7a67c7c5b605ed886730e2a985a004ee"
+//tasks.register<Exec>("codeClimateTestReporter") {
+//    dependsOn("test")
+//    executable("./cc-test-reporter")
+//
+//    doFirst {
+//        exec {
+//            commandLine("bash", "-c",
+//                    "JACOCO_SOURCE_PATH=src/main/java " +
+//                    "CC_TEST_REPORTER_ID=$ccTestReporterId " +
+//                    "./cc-test-reporter format-coverage build/reports/jacoco/test/jacocoTestReport.xml " +
+//                    "--input-type jacoco")
+//        }
+//    }
+//    doLast {
+//        exec {
+//            commandLine("bash", "-c",
+//                    "CC_TEST_REPORTER_ID=$ccTestReporterId  " +
+//                    "./cc-test-reporter upload-coverage")
+//        }
+//    }
+//}
