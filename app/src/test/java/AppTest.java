@@ -27,15 +27,14 @@ public class AppTest {
             Path path1 = Paths.get("src/test/resources/file1.json").toAbsolutePath();
             Path path2 = Paths.get("src/test/resources/file2.json").toAbsolutePath();
 
-            String expectedOutput = """
-                    {
-                     - follow:false
-                       host:hexlet.io
-                     - proxy:123.234.53.22
-                     - timeout:50
-                     + timeout:20
-                     + verbose:true
-                    }""";
+            String expectedOutput = "{\n"
+                    + " - follow:false\n"
+                    + "   host:hexlet.io\n"
+                    + " - proxy:123.234.53.22\n"
+                    + " - timeout:50\n"
+                    + " + timeout:20\n"
+                    + " + verbose:true\n"
+                    + "}";
 
             App.main(new String[]{path1.toString(), path2.toString()});
             assertEquals(expectedOutput, outContent.toString().trim());

@@ -9,7 +9,6 @@ plugins {
 
 jacoco {
     toolVersion = "0.8.11"
-    reportsDirectory.set(layout.buildDirectory.dir("customJacocoReportDir"))
 }
 group = "hexlet.code"
 version = "1.0-SNAPSHOT"
